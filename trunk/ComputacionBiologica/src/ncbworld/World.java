@@ -1,5 +1,7 @@
 package ncbworld;
 
+import ncbworld.Population.PopulationSelection;
+
 public class World {
 	
 	private int cycle;
@@ -11,7 +13,7 @@ public class World {
 	//IMPLEMENTS PATTERN: SINGLETON//
 	private static World INSTANCE = null;
 
-	// creador sincronizado para protegerse de posibles problemas  multi-hilo
+	// creador sincronizado para protegerse de posibles problemas multi-hilo
 	// otra prueba para evitar instantiación múltiple 
 	private synchronized static void createInstance() {
 		if (INSTANCE == null) {
@@ -74,7 +76,7 @@ public class World {
 	}
 
 	private void reproduction() {
-		// TODO Auto-generated method stub
+		this.population.reproduction();
 		
 	}
 
@@ -91,8 +93,7 @@ public class World {
 	}
 
 	private void selection() {
-		// TODO Auto-generated method stub
-		
+		this.population.selection();
 	}
 
 	public void setNMAXcycles(int xcycles) {

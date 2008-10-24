@@ -22,6 +22,7 @@ public abstract class Entity implements Comparable<Entity> {
 	abstract protected Entity giveBirth(boolean[] dna);
 
 	protected Entity[] defaultSimpleCrossReproduction(Entity e) {
+		MutatorAgent ma = MutatorAgent.getInstance();
 		Entity ret[] = new Entity[2];
 		boolean dnaf[] = e.getDna();
 		boolean dna1[], dna2[];
@@ -39,13 +40,14 @@ public abstract class Entity implements Comparable<Entity> {
 				dna2[i] = dna[i];
 				i++;
 			}
-			ret[0] = giveBirth(dna1);
-			ret[1] = giveBirth(dna2);
+			ret[0] = giveBirth(ma.mutate(dna1));
+			ret[1] = giveBirth(ma.mutate(dna2));
 		}
 		return ret;
 	}
 
 	protected Entity[] defaultUniformCrossReproduction(Entity e) {
+		MutatorAgent ma = MutatorAgent.getInstance();
 		Random r = new Random();
 		Entity ret[] = new Entity[2];
 		boolean dnaf[] = e.getDna();
@@ -65,13 +67,14 @@ public abstract class Entity implements Comparable<Entity> {
 				}
 				i++;
 			}
-			ret[0] = giveBirth(dna1);
-			ret[1] = giveBirth(dna2);
+			ret[0] = giveBirth(ma.mutate(dna1));
+			ret[1] = giveBirth(ma.mutate(dna2));
 		}
 		return ret;
 	}
 
 	protected Entity[] defaultMultiPercentageCrossReproduction(Entity e, int per) {
+		MutatorAgent ma = MutatorAgent.getInstance();
 		Random r = new Random();
 		Entity ret[] = new Entity[2];
 		boolean dnaf[] = e.getDna();
@@ -93,8 +96,8 @@ public abstract class Entity implements Comparable<Entity> {
 				}
 				i++;
 			}
-			ret[0] = giveBirth(dna1);
-			ret[1] = giveBirth(dna2);
+			ret[0] = giveBirth(ma.mutate(dna1));
+			ret[1] = giveBirth(ma.mutate(dna2));
 		}
 		return ret;
 	}
