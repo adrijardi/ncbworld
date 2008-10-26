@@ -1,4 +1,4 @@
-package p1rnd;
+package ncbworld.problems.aerialsp1;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -7,12 +7,51 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 public class AerialsReader {
-	private String fs = System.getProperty("file.separator");
-	private String route = "." + fs + "p1rnd" + fs + "Candidatas.txt";
+	private String route;
 	private BufferedReader br;
+	private Aerial[] a;
+	//IMPLEMENTS PATTERN: SINGLETON//
+	private static AerialsReader INSTANCE = null;
 
-	public AerialsReader() {
+	// Private constructor suppresses 
+	private AerialsReader() {
+		route = getRoute();
 		init();
+		readAerials();
+		close();
+	}
+
+	private String getRoute() {
+		StringBuilder sb = new StringBuilder();
+		String fs = System.getProperty("file.separator");
+		sb.append(".");
+		sb.append(fs);
+		sb.append("bin");
+		sb.append(fs);
+		sb.append(this.getClass().getPackage().getName().replaceAll("\\.", fs));
+		sb.append(fs);
+		sb.append("files");
+		sb.append(fs);
+		sb.append("Candidatas.txt");
+		return sb.toString();
+	}
+
+	public Aerial[] getA() {
+		return a;
+	}
+
+	// creador sincronizado para protegerse de posibles problemas  multi-hilo
+	// otra prueba para evitar instantiación múltiple 
+	private synchronized static void createInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new AerialsReader();
+		}
+	}
+
+	public static AerialsReader getInstance() {
+		if (INSTANCE == null)
+			createInstance();
+		return INSTANCE;
 	}
 
 	private void init() {
@@ -25,7 +64,7 @@ public class AerialsReader {
 	}
 
 
-	public Aerial[] readAerials() {
+	public void readAerials() {
 		LinkedList<Aerial> lle = new LinkedList<Aerial>();
 		int x, y;
 		try {
@@ -56,7 +95,7 @@ public class AerialsReader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return lle.toArray(new Aerial[0]);
+		a = lle.toArray(new Aerial[0]);
 	}
 
 	private void close() {

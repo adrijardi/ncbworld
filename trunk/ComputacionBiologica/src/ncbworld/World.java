@@ -1,20 +1,20 @@
 package ncbworld;
 
-import ncbworld.Population.PopulationSelection;
-
 public class World {
-	
+
 	private int cycle;
 	private int nEvaluations;
 	private int nMAXcycles;
 	private Population population;
 	private boolean show;
-	
-	//IMPLEMENTS PATTERN: SINGLETON//
+	private String file;
+	private FileWriter fw;
+
+	// IMPLEMENTS PATTERN: SINGLETON//
 	private static World INSTANCE = null;
 
 	// creador sincronizado para protegerse de posibles problemas multi-hilo
-	// otra prueba para evitar instantiación múltiple 
+	// otra prueba para evitar instantiación múltiple
 	private synchronized static void createInstance() {
 		if (INSTANCE == null) {
 			INSTANCE = new World();
@@ -27,20 +27,21 @@ public class World {
 		return INSTANCE;
 	}
 
-	// Private constructor suppresses 
+	// Private constructor suppresses
 	private World() {
 		cycle = 0;
 		nMAXcycles = 50;
 		nEvaluations = 0;
+		file = "results.txt";
 	}
-	
+
 	public void cyclemm() {
 		this.cycle++;
 	}
 
 	private void death() {
-		// TODO Auto-generated method stub
-		
+		this.population.death();
+
 	}
 
 	public int getCycle() {
@@ -55,41 +56,67 @@ public class World {
 		return nMAXcycles;
 	}
 
-	public void init(){
+	public void init() {
+		fw = new FileWriter(file);
 		cycle = 0;
 		nEvaluations = 0;
 		population.initPopulation();
 	}
 
-	public void nEvaluations() {
+	public String getFile() {
+		return file;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
+	}
+
+	public void nEvaluationsmm() {
 		this.nEvaluations++;
 	}
-	
+
 	private void printCycle() {
-		// TODO Auto-generated method stub
-		
+		//fw.println("\n\nPoblación del ciclo nº: " + cycle);
+		//fw.println(population);
+		fw.println(cycle+" "+population.bestToString());
 	}
 	
+	public void printBestChangeCycle(){
+		fw.println(cycle+" "+population.bestToString());
+		//fw.println(population);
+	}
+
 	private void printResults() {
-		// TODO Auto-generated method stub
-		
+		fw.println("\n\nResultados");
+		fw.println(population.bestToString());
+		fw.println("\n Evaluations: "+nEvaluations);
+
 	}
 
 	private void reproduction() {
 		this.population.reproduction();
-		
+
+	}
+	
+	public int getLastUpdate(){
+		return population.getLastUpdate();
 	}
 
-	public void run(){
+	public void run() {
 		init();
-		while(cycle <= nMAXcycles){
+		while (cycle <= nMAXcycles) {
 			cyclemm();
 			selection();
 			reproduction();
-			death();			
-			printCycle();
+			death();
+			//printCycle();
 		}
 		printResults();
+		close();
+	}
+
+	private void close() {
+		fw.close();
 	}
 
 	private void selection() {
