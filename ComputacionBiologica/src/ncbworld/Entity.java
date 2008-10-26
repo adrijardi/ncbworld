@@ -6,22 +6,24 @@ public abstract class Entity implements Comparable<Entity> {
 
 	protected final boolean[] dna;
 	protected Fitness fitness;
+	protected int familiar_per;
 
 	public Entity(boolean[] dna) {
 		this.dna = dna;
 		init();
 		fitness = fitness();
+		familiar_per = 85;
 	}
 
 	abstract protected void init();
 
-	abstract protected Entity[] reproduction(Entity e);
+	abstract protected Entity[] reproduction(Entity e, boolean sameFathers);
 
 	abstract protected Fitness fitness();
 
 	abstract protected Entity giveBirth(boolean[] dna);
 
-	protected Entity[] defaultSimpleCrossReproduction(Entity e) {
+	protected Entity[] defaultSimpleCrossReproduction(Entity e, boolean sameFathers) {
 		MutatorAgent ma = MutatorAgent.getInstance();
 		Entity ret[] = new Entity[2];
 		boolean dnaf[] = e.getDna();
@@ -40,13 +42,13 @@ public abstract class Entity implements Comparable<Entity> {
 				dna2[i] = dna[i];
 				i++;
 			}
-			ret[0] = giveBirth(ma.mutate(dna1));
-			ret[1] = giveBirth(ma.mutate(dna2));
+			ret[0] = giveBirth(ma.mutate(dna1, sameFathers));
+			ret[1] = giveBirth(ma.mutate(dna2, sameFathers));
 		}
 		return ret;
 	}
 
-	protected Entity[] defaultUniformCrossReproduction(Entity e) {
+	protected Entity[] defaultUniformCrossReproduction(Entity e, boolean sameFathers) {
 		MutatorAgent ma = MutatorAgent.getInstance();
 		Random r = new Random();
 		Entity ret[] = new Entity[2];
@@ -67,13 +69,13 @@ public abstract class Entity implements Comparable<Entity> {
 				}
 				i++;
 			}
-			ret[0] = giveBirth(ma.mutate(dna1));
-			ret[1] = giveBirth(ma.mutate(dna2));
+			ret[0] = giveBirth(ma.mutate(dna1, sameFathers));
+			ret[1] = giveBirth(ma.mutate(dna2, sameFathers));
 		}
 		return ret;
 	}
 
-	protected Entity[] defaultMultiPercentageCrossReproduction(Entity e, int per) {
+	protected Entity[] defaultMultiPercentageCrossReproduction(Entity e, int per, boolean sameFathers) {
 		MutatorAgent ma = MutatorAgent.getInstance();
 		Random r = new Random();
 		Entity ret[] = new Entity[2];
@@ -96,8 +98,8 @@ public abstract class Entity implements Comparable<Entity> {
 				}
 				i++;
 			}
-			ret[0] = giveBirth(ma.mutate(dna1));
-			ret[1] = giveBirth(ma.mutate(dna2));
+			ret[0] = giveBirth(ma.mutate(dna1, sameFathers));
+			ret[1] = giveBirth(ma.mutate(dna2, sameFathers));
 		}
 		return ret;
 	}
@@ -113,5 +115,45 @@ public abstract class Entity implements Comparable<Entity> {
 	@Override
 	public int compareTo(Entity o) {
 		return fitness.compareTo(o.getFitness());
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(fitness);
+		sb.append(" DNA:");
+		for (int i = 0; i < dna.length; i++) {
+			if(dna[i])
+				sb.append('1');
+			else
+				sb.append('0');
+		}
+		return sb.toString();
+	}
+
+	public boolean familiar(Entity f2) {
+		int smax, smin, count;
+		boolean dna2[] = f2.getDna();
+		boolean ret = false;
+		double p;
+		smax = Math.max(dna.length, dna2.length);
+		smin = Math.min(dna.length, dna2.length);
+		count = 0;
+		for (int i = 0; i < smin; i++) {
+			if(dna[i] == dna2[i])
+				count++;
+		}
+		p = (count * 100)/smax;
+		if(p >= familiar_per)
+			ret = true;
+		return ret;
+	}
+
+	public int getFamiliar_per() {
+		return familiar_per;
+	}
+
+	public void setFamiliar_per(int familiar_per) {
+		this.familiar_per = familiar_per;
 	}
 }

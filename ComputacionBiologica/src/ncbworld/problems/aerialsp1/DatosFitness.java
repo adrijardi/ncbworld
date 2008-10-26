@@ -1,24 +1,19 @@
-package p1rnd;
+package ncbworld.problems.aerialsp1;
 
-import cbworld.Fitness;
+import ncbworld.Fitness;
 
-public class DatosFitness implements Fitness{
+public class DatosFitness extends Fitness{
 	
 	private final double coverage;
-	private final double fitness;
 	private final int nareials;
 	
 	
 	public DatosFitness(int naerials, double coverage, double fitness){
+		super(fitness);
 		this.nareials = naerials;
 		this.coverage = coverage;
-		this.fitness = fitness;
 	}
 
-	@Override
-	public double getFitness() {
-		return fitness;
-	}
 
 	public double getCoverage() {
 		return coverage;
@@ -31,11 +26,10 @@ public class DatosFitness implements Fitness{
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Fitness: ");
-		sb.append(fitness);
+		sb.append(super.toString());
 		sb.append(" Coverage: ");
-		sb.append(coverage);
-		sb.append(" Nº de Antenas: ");
+		sb.append(truncate(coverage,4));
+		sb.append(" NA: ");
 		sb.append(nareials);
 		return sb.toString();
 	}
