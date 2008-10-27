@@ -175,5 +175,29 @@ public class MutatorAgent {
 		boolean ret = r.nextInt(100) < p;
 		return ret;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Mutation agent{NF: ");
+		sb.append(pmenf);
+		sb.append(", DNF: ");
+		sb.append(pmgdnf);
+		sb.append(", INF: ");
+		sb.append(pmginf);
+		sb.append(", TNF: ");
+		sb.append(pmgtnf);
+		sb.append(", SF: ");
+		sb.append(pmesf);
+		sb.append(", DSF: ");
+		sb.append(pmgdsf);
+		sb.append(", ISF: ");
+		sb.append(pmgisf);
+		sb.append(", TSF: ");
+		sb.append(pmgtsf);
+		sb.append('}');
+		
+		return sb.toString();
+	}
 
 }

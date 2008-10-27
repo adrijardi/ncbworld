@@ -60,7 +60,6 @@ public class World {
 		fw = new FileWriter(file);
 		cycle = 0;
 		nEvaluations = 0;
-		population.initPopulation();
 	}
 
 	public String getFile() {
@@ -102,8 +101,11 @@ public class World {
 		return population.getLastUpdate();
 	}
 
-	public void run() {
+	public void runSinglePopulation(int nMAXCycles) {
 		init();
+		printWorld(nMAXCycles);
+		printMutatorAgent();
+		initPopulation();
 		while (cycle <= nMAXcycles) {
 			cyclemm();
 			selection();
@@ -113,6 +115,70 @@ public class World {
 		}
 		printResults();
 		close();
+	}
+	
+	private void printWorld(int cycles) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Sigle: ");
+		sb.append(cycles);
+		fw.println(sb);
+	}
+
+	public void runMultiPopulation(int populations, int nMaxCyclesPopulations, int nMaxCyclesFinalPopulation){
+		init();
+		printWorld(populations,nMaxCyclesPopulations, nMaxCyclesFinalPopulation);
+		printMutatorAgent();
+		Entity[] pe = new Entity[populations];
+		for (int i = 0; i < pe.length; i++) {
+			cycle = 0;
+			System.out.println("Initial Population "+ i);
+			fw.println("\nInitial Population "+ i);
+			initPopulation();
+			while (cycle <= nMaxCyclesPopulations) {
+				cyclemm();
+				selection();
+				reproduction();
+				death();
+				//printCycle();
+			}
+			pe[i] = population.getBestEverEntity();
+		}
+		cycle = 0;
+		System.out.println("\nFinal Population");
+		population.setInitialPopulation(pe);
+		fw.println("\n");
+		fw.println(population);
+		fw.println("Final Population");
+		while (cycle <= nMaxCyclesFinalPopulation) {
+			cyclemm();
+			selection();
+			reproduction();
+			death();
+			//printCycle();
+		}
+		printResults();
+		close();
+	}
+
+	private void printWorld(int populations, int maxCyclesPopulations,
+			int maxCyclesFinalPopulation) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Multi: p: ");
+		sb.append(populations);
+		sb.append(" mcp: ");
+		sb.append(maxCyclesPopulations);
+		sb.append(" mcfp: ");
+		sb.append(maxCyclesFinalPopulation);
+		fw.println(sb);
+		
+	}
+
+	private void initPopulation() {
+		population.initPopulation();
+	}
+
+	private void printMutatorAgent() {
+		fw.println(MutatorAgent.getInstance());
 	}
 
 	private void close() {

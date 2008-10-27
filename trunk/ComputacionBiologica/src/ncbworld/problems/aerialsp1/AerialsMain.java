@@ -8,6 +8,7 @@ import ncbworld.Population.PopulationSelection;
 
 public class AerialsMain {
 	private World w = World.getInstance();
+	private int cycles;
 
 	/**
 	 * @param args
@@ -27,10 +28,16 @@ public class AerialsMain {
 	}
 
 	private void run() {
-		w.run();
+		//w.runSinglePopulation(cycles);
+		int p = 20;
+		int cp = 100;
+		int ct = cycles - (p * cp);
+		w.runMultiPopulation(p,cp,ct);
 	}
 
 	public AerialsMain(boolean b, int popSize, int cycles) {
+		this.cycles = cycles;
+		
 		System.out.println(b + " " + popSize + " " + cycles);
 		String file = getRoute(b, popSize, cycles);
 		System.out.println(file);
@@ -47,7 +54,7 @@ public class AerialsMain {
 			w.setShow(true);
 			MutatorAgent ma = MutatorAgent.getInstance();
 			if (b)
-				ma.initMA(15, 0, 15, 10, 85, 0, 35, 50);
+				ma.initMA(15, 0, 0, 30, 100, 0, 0, 1);
 			else
 				ma.initMA(15, 0, 5, 10, 75, 0, 2, 0);
 		}

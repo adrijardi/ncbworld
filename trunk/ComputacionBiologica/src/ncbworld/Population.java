@@ -23,6 +23,10 @@ public class Population {
 		this.selection = selection;
 	}
 
+	public Entity getBestEverEntity() {
+		return bestEverEntity;
+	}
+
 	public enum PopulationSelection {
 		ROULETTE, HIERARCHICAL, TOURNAMENT, OTHER;
 	}
@@ -104,6 +108,10 @@ public class Population {
 
 	public void initPopulation() {
 		Entity e;
+		population.clear();
+		bestCycleEntity = null;
+		bestEverEntity = null;
+		
 		for (int i = 0; i < maxSize; i++) {
 			e = eb.getRandomEntity();
 			checkAndSetBestEntity(e);
@@ -201,6 +209,16 @@ public class Population {
 		}
 		sb.append("\n-------");
 		return sb.toString();
+	}
+
+	public void setInitialPopulation(Entity[] pe) {
+		population.clear();
+		bestCycleEntity = null;
+		bestEverEntity = null;
+		for (int i = 0; i < pe.length; i++) {
+			checkAndSetBestEntity(pe[i]);
+			population.put(pe[i].getFitness(), pe[i]);
+		}
 	}
 
 }
