@@ -36,7 +36,7 @@ public class AerialsEntityA extends Entity {
 			return new DatosFitness(0, 0.0, 0.0);
 		}
 		double fitness = 100 - coverage_rate;
-		fitness *= 1 + ((Math.abs(50 - numero_antenas)+1) * 9 / 10);
+		fitness *= 1 + (Math.abs(50 - numero_antenas)+1);
 		return new DatosFitness(numero_antenas, coverage_rate, fitness);
 	}
 
